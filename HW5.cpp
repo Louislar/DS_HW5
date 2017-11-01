@@ -28,6 +28,8 @@ public:
     linkedList()
     {
         listLength=0;
+        first=0;
+        last=0;
     }
     chainNode* first;
     chainNode* last;
@@ -44,6 +46,7 @@ public:
         {
             chainNode* temp=new chainNode(element, 0);
             last->link=temp;
+            last=temp;
         }
         listLength++;
     }
@@ -51,7 +54,13 @@ public:
     {
         if(index>listLength)
         {
-            cout<<"Insert index is out of range!!";
+            cout<<"Insert index is out of range!!"<<endl;
+        }
+        else if(index==0)
+        {
+            chainNode* temp=new chainNode(element, first);
+            first=temp;
+            listLength++;
         }
         else
         {
@@ -68,9 +77,9 @@ public:
     }
     void deleted(int index)
     {
-        if(index>listLength)
+        if(index>listLength||index<=0)
         {
-            cout<<"Insert index is out of range!!";
+            cout<<"Insert index is out of range!!"<<endl;
         }
         else
         {
@@ -82,6 +91,9 @@ public:
                 current=current->link;
             }
 
+            /*cout<<"DELETE current data: "<<current->data<<endl;
+            cout<<"DELETE pre data: "<<pre->data<<endl;*/
+
             if(current==first)
             {
                 first=first->link;
@@ -90,6 +102,7 @@ public:
             else if(current==last)
             {
                 last=pre;
+                last->link=0;
                 delete current;
             }
             else
@@ -110,9 +123,12 @@ public:
             cur->link=pre;
             pre=cur;
             cur=next;
+            if(next==0) break;
             next=next->link;
         }
-
+        chainNode* temp=first;
+        first=last;
+        last=temp;
     }
     int isEmpty()
     {
@@ -124,9 +140,10 @@ public:
         chainNode* cur=first;
         while(cur!=0)
         {
-            cout<<cur->data;
+            cout<<cur->data<<" ";
             cur=cur->link;
         }
+        cout<<"\n\n";
     }
 };
 
@@ -146,7 +163,7 @@ int main()
     while(1)
     {
         string instruction;
-        cin>>instruction;
+        ifs>>instruction;
         string a;
         a[0]=EOF;
         if(instruction.compare(a)==0) break;
@@ -155,25 +172,38 @@ int main()
         if(instruction[0]=='A')
         {
             int num;
-            cin>>num;
+            ifs>>num;
+            list.add(num);
+
         }
 
         //INSERT
         if(instruction[0]=='I')
         {
-
+            int num;
+            int index;
+            string tempstr;
+            ifs>>num>>tempstr>>index;
+            list.insert(num, index);
         }
 
         //DELETE
         if(instruction[0]=='D')
         {
-
+            int index;
+            ifs>>index;
+            list.deleted(index);
         }
 
         //REVERSE
         if(instruction[0]=='R')
         {
-
+            list.reverse();
         }
+        /*cout<<"First point to data: "<<list.first->data<<endl;
+        cout<<"Last point to data: "<<list.last->data<<endl;
+        cout<<"List Length: "<<list.listLength<<endl;*/
+        list.print();
+
     }
 }
